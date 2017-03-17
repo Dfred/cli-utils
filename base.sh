@@ -57,7 +57,7 @@ function fatal_prog_error () {
 
 ## INVOKE SUDO/SU IF NEEDED
 function run_as () {
-## $1: USER NAME
+  ## $1: USER NAME
   if ! getent passwd $1 >/dev/null 2>&1; then
     fatal_prog_error "USER '$1' DOES NOT EXIST"
   fi
@@ -70,27 +70,27 @@ function run_as () {
 
 ## PROCESS_NAME TO USER_NAME PID PROCESS_NAME.
 function procname2Upca () {
-## $1: PROCESS NAME - REGEXP ALLOWED
+  ## $1: PROCESS NAME - REGEXP ALLOWED
   ps ax -o '%U %p %a' | grep -E "$1"                  | grep -v grep |sort
 }
 
 ## PROCESS_NAME TO USER_NAME.
 function procname2U () {
-## $1: PROCESS NAME - REGEXP ALLOWED
+  ## $1: PROCESS NAME - REGEXP ALLOWED
   ps ax -o '%U %c'    | grep -E "$1" | cut -f1 -d' '  | grep -v grep |sort
 }
 
 ## PROCESS_NAME TO PID.
 function procname2p () {
-## $1: PROCESS NAME - REGEXP ALLOWED
+  ## $1: PROCESS NAME - REGEXP ALLOWED
   ps ax -o '%p %U'    | grep -E "$1" | cut -f1 -d' '  | grep -v grep |sort
 }
 
 ## GENERIC COLORISED PRINT WITH SUPPORT FOR FORMATTING.
 function p_color () {
-## $1   : ANY OF P_* COLORS               #XXX: E.G: "-N ${P_CRIT}"
-## $2   : OPTIONS TO echo (OPTIONAL)
-## $3-n : MESSAGE
+  ## $1   : ANY OF P_* COLORS               #XXX: E.G: "-N ${P_CRIT}"
+  ## $2   : OPTIONS TO echo (OPTIONAL)
+  ## $3-n : MESSAGE
   local color="$1"; shift
   local opts=""
   if [[ ${1:0:1} == "-" ]]; then
@@ -110,14 +110,14 @@ function p_color () {
 
 ## SCRIPT HAS SOMETHING INFORMATIVE TO SAY.
 function bot_info () {
-## $@ : same as echo
+  ## $@ : same as echo
   echo -ne "$BP$B_AWAKE "
   p_color ${P_CSMC} "$@"
 }
 
 ## SCRIPT HAS SOMETHING HE'S HAPPY ABOUT.
 function bot_success () {
-## $@ : SAME AS echo (MESSAGE WILL BE PREFIXED)
+  ## $@ : SAME AS echo (MESSAGE WILL BE PREFIXED)
   echo -ne "$BP$B_HAPPY "
   [[ ${1:0:1} == '-' ]] && local opts="$1" && shift
   p_color ${P_SUCC} "$opts" "Good: $@"
@@ -125,7 +125,7 @@ function bot_success () {
 
 ## SCRIPT HAS SOMETHING YOU SHOULD PAY ATTENTION TO.
 function bot_warn () {
-## $@ : SAME AS echo (MESSAGE WILL BE PREFIXED)
+  ## $@ : SAME AS echo (MESSAGE WILL BE PREFIXED)
   echo -ne "$BP$B_UPSET "
   [[ ${1:0:1} == '-' ]] && local opts="$1" && shift
   p_color ${P_WARN} "$opts" "Hey! $@"
@@ -133,8 +133,8 @@ function bot_warn () {
 
 ## SCRIPT HAS SOMETHING HE'S CHOCKING ABOUT AND WILL DIE.
 function bot_fatal () {
-## $1   : exit CODE
-## $2-n : SAME AS echo (MESSAGE WILL BE PREFIXED)
+  ## $1   : exit CODE
+  ## $2-n : SAME AS echo (MESSAGE WILL BE PREFIXED)
   ecode=$1; shift
   echo; echo -ne "$BP$B_DYING "
   [[ ${1:0:1} == '-' ]] && local opts="$1" && shift
@@ -144,10 +144,10 @@ function bot_fatal () {
 
 ## SCRIPT HAS SOMETHING TO ASK AND WANT A VALID OR EMPTY ANSWER.
 function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
-## $1     : MESSAGE
-## $2     : DEFAULT (AS INDEX IN $choices) IF USER PROVIDES AN EMPTY ANSWER
-## $3-n   : CHOICES (WITH UNIQUE LEADING CHARACTER, E.G: "yes" "no" "abort")
-## returns: 0, AND SETS $BOTASK_ANSWER TO THE ANSWER'S INDEX WITHIN $choices
+  ## $1     : MESSAGE
+  ## $2     : DEFAULT (AS INDEX IN $choices) IF USER PROVIDES AN EMPTY ANSWER
+  ## $3-n   : CHOICES (WITH UNIQUE LEADING CHARACTER, E.G: "yes" "no" "abort")
+  ## returns: 0, AND SETS $BOTASK_ANSWER TO THE ANSWER'S INDEX WITHIN $choices
 
   ## EASE OUR DEVS' LIFE
   [[ $2 =~ ^-?[0-9]+$ ]] || fatal_prog_error "'$2' IS NOT AN INTEGER";
@@ -155,6 +155,7 @@ function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
   local msg="$1" def_choice=$2; shift 2
   local choices=($@)
   local prompt="$BP"
+  #TDL CONSIDER A VERSION of bot_choice() USING $1 AS SET-BY-REFERENCE VARIABLE
   BOTASK_ANSWER="$def_choice"             #XXX: ACCESS TO USER'S CHOICE
   for c in "$@"; do
     if [[ "$c" == "${choices[$def_choice]}" ]]; then
@@ -184,8 +185,8 @@ function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
 ## SCRIPT WAITS FOR AN EVALED EXPRESSION TO EXIT A NON-ZERO VALUE.
 #XXX: EXAMPLE CALL: bot_waitWhile test -n \"'$(procname2p \$RE_PROC_httpd)'\"
 function bot_waitWhile () {               #TDL: ADD TIMEOUT?
-## $1     : bash EXPRESSION
-## returns: 0
+  ## $1     : bash EXPRESSION
+  ## returns: 0
   local s=0 out=""
 #  set -ex                                #XXX: UNCOMMENT WHEN IT GETS TRICKY.
   while eval $@; do
@@ -206,14 +207,15 @@ function bot_waitWhile () {               #TDL: ADD TIMEOUT?
 
 ## SCRIPT USES N-th ARG OR ASKS FOR A VALUE
 #XXX: EXAMPLE CALL: ask_or_arg 2 '"are you OK? " 1 yes no' sure unsure maybe
-function ask_or_arg () {
-## $1     : N (INDEX OF PASSED ARGUMENTS)
-## $2     : bot_choice COMMAND GIVEN TO eval; E.G: '"proceed? " 1 yes no'
-## $3-n   : LIST OF ARGUMENTS TO BE INDEXED WITH $1; E.G: $@
-## return : VALUE AT LIST'INDEX OR USER PROVIDED STRING
-  local i=$1 cmd=$2; shift 2
+function bot_argOrChoice () {
+  ## $1     : N (*INDEX* IN LIST CONSISTING OF ARGUMENTS FROM $3)
+  ## $2     : bot_choice COMMAND GIVEN TO eval; E.G: '"proceed? " 1 yes no'
+  ## $3-n   : LIST OF ARGUMENTS TO BE INDEXED WITH $1; E.G: $@
+  ## return : VALUE AT LIST'INDEX OR USER PROVIDED STRING
+  local i=$1; eval "local bc_args=($2)"; shift 2
   local list=($@)
   if [[ -n "${list[$i]}" ]]; then echo "${list[$i]}";
-  else eval bot_choice $cmd
+  else bot_choice "${bc_args[0]}" ${bc_args[@]:1}
+    echo ${bc_args[$BOTASK_ANSWER+2]}
   fi
 }
