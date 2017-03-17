@@ -11,6 +11,8 @@ readonly EXIT_OK=0
 ## MAYBE LEAVE ROOM FOR LSB init SCRIPTS EXIT CODES
 readonly EXIT_UNKNOWN=10
 readonly EXIT_USER_ABORT=11
+readonly EXIT_INVALID_ARGUMENT=12
+## LEAVE [ 64 - 78 ] (SEE /usr/include/sysexits.h)
 #readonly EXIT_
 
 ## ===============
@@ -106,14 +108,14 @@ function p_color () {
 # p_color ${CBE} -n "Hi " "${CMPV}$(whoami)"; p_color ${CGN} " GO?"
 # p_color ${CWE} -n "this 2-call version"; p_color ${CYW} " also works!"
 
-## Wippy HAS SOMETHING INFORMATIVE TO SAY.
+## SCRIPT HAS SOMETHING INFORMATIVE TO SAY.
 function bot_info () {
 ## $@ : same as echo
   echo -ne "$BP$B_AWAKE "
   p_color ${P_CSMC} "$@"
 }
 
-## Wippy HAS SOMETHING HE'S HAPPY ABOUT.
+## SCRIPT HAS SOMETHING HE'S HAPPY ABOUT.
 function bot_success () {
 ## $@ : SAME AS echo (MESSAGE WILL BE PREFIXED)
   echo -ne "$BP$B_HAPPY "
@@ -121,7 +123,7 @@ function bot_success () {
   p_color ${P_SUCC} "$opts" "Good: $@"
 }
 
-## Wippy HAS SOMETHING YOU SHOULD PAY ATTENTION TO.
+## SCRIPT HAS SOMETHING YOU SHOULD PAY ATTENTION TO.
 function bot_warn () {
 ## $@ : SAME AS echo (MESSAGE WILL BE PREFIXED)
   echo -ne "$BP$B_UPSET "
@@ -129,7 +131,7 @@ function bot_warn () {
   p_color ${P_WARN} "$opts" "Hey! $@"
 }
 
-## Wippy HAS SOMETHING HE'S CHOCKING ABOUT AND WILL DIE.
+## SCRIPT HAS SOMETHING HE'S CHOCKING ABOUT AND WILL DIE.
 function bot_fatal () {
 ## $1   : exit CODE
 ## $2-n : SAME AS echo (MESSAGE WILL BE PREFIXED)
@@ -140,7 +142,7 @@ function bot_fatal () {
   exit $ecode
 }
 
-## Wippy HAS SOMETHING TO ASK AND WANT A VALID OR EMPTY ANSWER.
+## SCRIPT HAS SOMETHING TO ASK AND WANT A VALID OR EMPTY ANSWER.
 function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
 ## $1     : MESSAGE
 ## $2     : DEFAULT (AS INDEX IN $choices) IF USER PROVIDES AN EMPTY ANSWER
@@ -179,7 +181,7 @@ function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
   done
 }
 
-## Wippy WAITS FOR AN EVALED EXPRESSION TO EXIT A NON-ZERO VALUE.
+## SCRIPT WAITS FOR AN EVALED EXPRESSION TO EXIT A NON-ZERO VALUE.
 #XXX: EXAMPLE CALL: bot_waitWhile test -n \"'$(procname2p \$RE_PROC_httpd)'\"
 function bot_waitWhile () {               #TDL: ADD TIMEOUT?
 ## $1     : bash EXPRESSION
@@ -202,3 +204,16 @@ function bot_waitWhile () {               #TDL: ADD TIMEOUT?
   return 0
 }
 
+## SCRIPT USES N-th ARG OR ASKS FOR A VALUE
+#XXX: EXAMPLE CALL: ask_or_arg 2 '"are you OK? " 1 yes no' sure unsure maybe
+function ask_or_arg () {
+## $1     : N (INDEX OF PASSED ARGUMENTS)
+## $2     : bot_choice COMMAND GIVEN TO eval; E.G: '"proceed? " 1 yes no'
+## $3-n   : LIST OF ARGUMENTS TO BE INDEXED WITH $1; E.G: $@
+## return : VALUE AT LIST'INDEX OR USER PROVIDED STRING
+  local i=$1 cmd=$2; shift 2
+  local list=($@)
+  if [[ -n "${list[$i]}" ]]; then echo "${list[$i]}";
+  else eval bot_choice $2
+  fi
+}
