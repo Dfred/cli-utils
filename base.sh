@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# STOP ON ERROR
+set -e                                    ## CATCH ERRORS IN YOUR OWN SCRIPTS
+
+## ===============
+## = FANCY STUFF =
+## ===============
+
+EXIT_OK = 0
+# MAYBE LEAVE ROOM FOR LSB init SCRIPTS EXIT CODES
+EXIT_UNKNOWN    = 10
+EXIT_USER_ABORT = 11
+#EXIT_
+
 ## ===============
 ## = FANCY STUFF =
 ## ===============
