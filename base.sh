@@ -24,18 +24,19 @@ readonly EXIT_INVALID_ARGUMENT=12
 ##    http://kevin.colyar.net/wp-content/uploads/2011/01/Preferences.jpg
 ## Linux: YOU ARE ALREADY PROVIDED.
 ## Windows: IF YOU'RE SERIOUS, TRY YOUR CHANCE WITH CYGWIN.
-readonly CDG='\x1B[0;30m'                 ## COLOR DARK GREY
-readonly CRD='\x1B[0;31m'                 ## COLOR RED
-readonly CGN='\x1B[0;32m'                 ## COLOR GREEN
-readonly CYW='\x1B[0;33m'                 ## COLOR YELLOW
-readonly CBE='\x1B[0;34m'                 ## COLOR BLUE
-readonly CMA='\x1B[0;35m'                 ## COLOR MAGENTA
-readonly CCN='\x1B[0;36m'                 ## COLOR CYAN
-readonly CGY='\x1B[0;37m'                 ## COLOR LIGHT GREY
-readonly CWE='\x1B[1;37m'                 ## COLOR WHITE (ALSO BOLD)
+readonly CDG=$'\x1B[0;30m'                ## COLOR DARK GREY
+readonly CRD=$'\x1B[0;31m'                ## COLOR RED
+readonly CGN=$'\x1B[0;32m'                ## COLOR GREEN
+readonly CYW=$'\x1B[0;33m'                ## COLOR YELLOW
+readonly CBE=$'\x1B[0;34m'                ## COLOR BLUE
+readonly CMA=$'\x1B[0;35m'                ## COLOR MAGENTA
+readonly CCN=$'\x1B[0;36m'                ## COLOR CYAN
+readonly CGY=$'\x1B[0;37m'                ## COLOR LIGHT GREY
+readonly CWE=$'\x1B[1;37m'                ## COLOR WHITE (ALSO BOLD)
 #readonly CBK='\x1B[m'                     ## COLOR BLACK
-readonly NORM='\033[m'                    ##
-readonly LARG='\033[1m'                   ## BOLD
+readonly NORM=$'\033[m'                   ##
+readonly LARG=$'\033[1m'                  ## BOLD
+
 readonly CMPV="${CMA}${LARG}"             ## COMPUTED VALUE
 readonly USRV="${CCN}${LARG}"             ## USER-PROVIDED VALUE
 
@@ -166,19 +167,15 @@ function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
   done
 
   while true; do
-    echo -ne "$BP$B_AWAKE "
-    p_color ${P_QSTN} -n "$msg"
-    echo -ne "$prompt> "
-    read -N 1 ans
+    read -p $"$BP$B_AWAKE ${P_QSTN} $msg $prompt> " -N 1 ans
     for (( i=0; i<=${#choices[@]}-1; i++ )); do
       test -z $ans && return 0            #TDL: PRESSING SPACE (RETURN OK)
       c=${choices[$i]}
       if [[ "$ans" == ${c:0:1} ]]; then
-        echo
         BOTASK_ANSWER=$i && return 0      #XXX: set -e SO RETURN 0
       fi
     done
-    echo -e "\r$BP$B_EMBRS"               ## USER MISTYPED: EMBARRASSMENT
+    echo -e "\r$BP$B_EMBRS" >&2           ## USER MISTYPED: EMBARRASSMENT
   done
 }
 
