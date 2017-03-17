@@ -50,7 +50,7 @@ readonly P_CSMC="${CBE}"                  ## LEVEL: COSMETIC (OPTIONAL)
 ## ======================
 
 function fatal_prog_error () {
-  echo -e "${CRD}${LARG}PROGRAM ERROR${NORM}${CRD} [$0:${BASH_LINENO[1]}] CALL"\
+  echo -e "${CRD}${LARG}SCRIPT ERROR${NORM}${CRD} [$0:${BASH_LINENO[1]}] CALL"\
     TO ${FUNCNAME[1]}:${NORM} $1
   exit 127
 }
@@ -214,6 +214,6 @@ function ask_or_arg () {
   local i=$1 cmd=$2; shift 2
   local list=($@)
   if [[ -n "${list[$i]}" ]]; then echo "${list[$i]}";
-  else eval bot_choice $2
+  else eval bot_choice $cmd
   fi
 }
