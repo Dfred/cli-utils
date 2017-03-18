@@ -12,8 +12,9 @@ readonly EXIT_OK=0
 readonly EXIT_UNKNOWN=10
 readonly EXIT_USER_ABORT=11
 readonly EXIT_FATAL_ERROR=12
-readonly EXIT_NOT_IMPLEMENTED=13
-readonly EXIT_INVALID_ARGUMENT=14
+readonly EXIT_UNUSABLE_SYS=13
+readonly EXIT_NOT_IMPLEMENTED=14
+readonly EXIT_INVALID_ARGUMENT=15         #XXX ALSO WHEN PEBKAC
 ## LEAVE [ 64 - 78 ] (SEE /usr/include/sysexits.h)
 #readonly EXIT_
 
@@ -70,6 +71,23 @@ function run_as ()
   fi
   shift
   $prefix "$@"
+}
+
+## CHECK FOR THE PRESENCE OF BINARIES, POTENTIALLY BAILING OUT
+## AND SET VARIABLES (NAMED AS THE BINARY) TO THEIR FULLPATH.
+function test_bin ()
+  ## $1: IF 1, CALL bot_fatal ON MISSING; IGNORE OTHERWISE
+  ## $2-n: list of binary names to be found
+{
+  local bail=$1; shift
+  for bin in $@; do
+    path=$(type -p $bin 2>/dev/null) && declare global $bin="$path" ||
+      {
+        test $bail && bot_fatal $EXIT_UNUSABLE_SYS "the executable $bin" ||
+        continue
+      }
+    test -x $bin || bot_fatal $EXIT_UNUSABLE_SYS "$bin to have executable flags"
+  done
 }
 
 ## PROCESS_NAME TO USER_NAME PID PROCESS_NAME.
