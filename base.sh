@@ -144,6 +144,7 @@ function bot_fatal () {
 }
 
 ## SCRIPT HAS SOMETHING TO ASK AND WANT A VALID OR EMPTY ANSWER.
+#XXX E.G: bot_choice "are you OK?" 2 yes no 'who knows!'
 function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
   ## $1     : MESSAGE
   ## $2     : DEFAULT (AS INDEX IN $choices) IF USER PROVIDES AN EMPTY ANSWER
@@ -152,9 +153,11 @@ function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
 
   ## EASE OUR DEVS' LIFE
   [[ $2 =~ ^-?[0-9]+$ ]] || fatal_prog_error "'$2' IS NOT AN INTEGER";
+  local max_i=$(expr $# - $2)
+  [[ $2 -lt $max_i ]] || fatal_prog_error "'$2' > MAX INDEX ($max_i)";
 
   local msg="$1" def_choice=$2; shift 2
-  local choices=($@)
+  local choices=("$@")
   local prompt="$BP"
   #TDL CONSIDER A VERSION of bot_choice() USING $1 AS SET-BY-REFERENCE VARIABLE
   BOTASK_ANSWER="$def_choice"             #XXX: ACCESS TO USER'S CHOICE
@@ -167,11 +170,12 @@ function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
   done
 
   while true; do
-    read -p $"$BP$B_AWAKE ${P_QSTN} $msg $prompt> " -N 1 ans
+    read -p $"$BP$B_AWAKE ${P_QSTN} $msg $prompt> " -r -N1 REPLY
     for (( i=0; i<=${#choices[@]}-1; i++ )); do
-      test -z $ans && return 0            #TDL: PRESSING SPACE (RETURN OK)
+      test -z "$REPLY" && return 0
       c=${choices[$i]}
-      if [[ "$ans" == ${c:0:1} ]]; then
+      if [[ "${REPLY:0:1}" == ${c:0:1} ]]; then
+        read -p $'\n' -r -N1 -t0.001 || : #XXX: ENFORCE \n TO PRESERVE EYES
         BOTASK_ANSWER=$i && return 0      #XXX: set -e SO RETURN 0
       fi
     done
@@ -180,7 +184,7 @@ function bot_choice () {                  #XXX: FANCIER select ALTERNATIVE
 }
 
 ## SCRIPT WAITS FOR AN EVALED EXPRESSION TO EXIT A NON-ZERO VALUE.
-#XXX: EXAMPLE CALL: bot_waitWhile test -n \"'$(procname2p \$RE_PROC_httpd)'\"
+#XXX E.G: bot_waitWhile test -n \"'$(procname2p \$RE_PROC_httpd)'\"
 function bot_waitWhile () {               #TDL: ADD TIMEOUT?
   ## $1     : bash EXPRESSION
   ## returns: 0
@@ -203,16 +207,21 @@ function bot_waitWhile () {               #TDL: ADD TIMEOUT?
 }
 
 ## SCRIPT USES N-th ARG OR ASKS FOR A VALUE
-#XXX: EXAMPLE CALL: ask_or_arg 2 '"are you OK? " 1 yes no' sure unsure maybe
+#XXX: E.G: ask_or_arg 0 '"are you OK? " 1 yes no' sure unsure; [[ $?==2 ]] && echo ""
 function bot_argOrChoice () {
   ## $1     : N (*INDEX* IN LIST CONSISTING OF ARGUMENTS FROM $3)
   ## $2     : bot_choice COMMAND GIVEN TO eval; E.G: '"proceed? " 1 yes no'
   ## $3-n   : LIST OF ARGUMENTS TO BE INDEXED WITH $1; E.G: $@
-  ## return : VALUE AT LIST'INDEX OR USER PROVIDED STRING
+  ## echoes : VALUE AT LIST'INDEX OR USER PROVIDED STRING
+  ## returns: VALUE ORIGIN: 1 IF FROM ARGUMENTS, 2 IF FROM USER INPUT
   local i=$1; eval "local bc_args=($2)"; shift 2
   local list=($@)
-  if [[ -n "${list[$i]}" ]]; then echo "${list[$i]}";
-  else bot_choice "${bc_args[0]}" ${bc_args[@]:1}
+  if [[ -n "${list[$i]}" ]]; then
+    echo "${list[$i]}"
+    return 1
+  else
+    bot_choice "${bc_args[0]}" ${bc_args[@]:1}
     echo ${bc_args[$BOTASK_ANSWER+2]}
+    return 2
   fi
 }
