@@ -86,7 +86,7 @@ function test_bin ()
         test $bail && bot_fatal $EXIT_UNUSABLE_SYS "the executable $bin" ||
         continue
       }
-    test -x $bin || bot_fatal $EXIT_UNUSABLE_SYS "$bin to have executable flags"
+    test -x "$path" || bot_fatal $EXIT_UNUSABLE_SYS "$bin to have executable flags"
   done
 }
 
