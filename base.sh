@@ -231,7 +231,7 @@ function bot_argOrChoice ()
   [[ $1 =~ ^-?[0-9]+$ ]] || fatal_prog_error "'$1' IS NOT AN INTEGER";
 
   local i=$1; eval "local bc_args=($2)"; shift 2
-  local list=($@)
+  local list=("$@")
 
   if [[ -n "${list[$i]}" ]]; then
     echo "${list[$i]}"
