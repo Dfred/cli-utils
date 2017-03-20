@@ -64,7 +64,7 @@ function run_as ()
 ## AND SET VARIABLES (NAMED AS THE BINARY) TO THEIR FULLPATH.
 function test_bin ()
   ## $1: IF 1, CALL bot_fatal ON MISSING; IGNORE OTHERWISE
-  ## $2-n: list of binary names to be found
+  ## $2-n: LIST OF BINARY NAMES TO BE FOUND
 {
   local bail=$1; shift
   for bin in $@; do
@@ -123,7 +123,7 @@ function p_color ()
 
 ## SCRIPT HAS SOMETHING INFORMATIVE TO SAY.
 function bot_info ()
-  ## $@ : same as echo
+  ## $@ : SAME AS echo
 {
   echo -ne "$BP$B_AWAKE "
   p_color ${P_CSMC} "$@"
