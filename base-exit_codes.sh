@@ -8,5 +8,6 @@ readonly EXIT_FATAL_ERROR=12
 readonly EXIT_UNUSABLE_SYS=13
 readonly EXIT_NOT_IMPLEMENTED=14
 readonly EXIT_INVALID_ARGUMENT=15         #XXX ALSO WHEN PEBKAC
+readonly EXIT_MISSING_ARGUMENT=16         #XXX EXPLICIT PEBKAC
 ## LEAVE [ 64 - 78 ] (SEE /usr/include/sysexits.h)
 #readonly EXIT_
