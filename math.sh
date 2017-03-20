@@ -17,9 +17,9 @@ function math_abs ()
 function rand_b64 ()
   ## $1: LENGTH OF STRING TO GENERATE
 {
-  if ! $( type -t head > /dev/null && type -t base64 > /dev/null ); then
-    return EXIT_UNUSABLE_SYS
-  fi
+  test -z "$1" && return $EXIT_MISSING_ARGUMENT
+  $( type -t head base64 > /dev/null ) || return $EXIT_UNUSABLE_SYS
+  
   result=$(head -c $1 /dev/urandom | base64)
   echo ${result::$1}
 }
@@ -29,10 +29,10 @@ function rand_b64 ()
 function rand_b64_big ()
   ## $1: LENGTH OF STRING TO GENERATE
 {
-  if ! $( type -t head > /dev/null && type -t base64 > /dev/null ); then
-    return EXIT_UNUSABLE_SYS
-  fi
-  local chars=$(bc << "$1 * .740261")          # TESTED WITH 100MB LENGTH
+  test -z "$1" && return $EXIT_MISSING_ARGUMENT
+  $( type -t head base64 bc > /dev/null) || return $EXIT_UNUSABLE_SYS
+
+  local chars=$(bc <<< "$1 * .740261")    # TESTED WITH 100MB LENGTH
   # bc IS POSIX BUT HAS NO CONSENSUS ON ROUNDING (scale=0 DOESN'T WORK)
   result=$(head -c ${chars%.*} /dev/urandom | base64)
   echo ${result::$1}
