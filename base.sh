@@ -36,6 +36,19 @@ readonly P_SUCC="${CGN}"                  ## LEVEL: SUCCESS
 readonly P_QSTN="${CGY}"                  ## LEVEL: QUESTION
 readonly P_CSMC="${CBE}"                  ## LEVEL: COSMETIC (OPTIONAL)
 
+## COPY OR SET THE FOLLOWING FOR INCLUSION IN bot_* FUNCTIONS
+# readonly BP="  "                          ## BOT PREFIX (INDENTATION)
+# readonly BS="$CBE"                        ## BOT SKIN COLOR
+# readonly B_AWAKE="$BS(${CGY}｡${CCN}◕$BS‿${CCN}◕${CGY}｡$BS)${NORM}"
+# readonly B_HAPPY="$BS(${CGN}｡${CYW}^$BS‿${CYW}^${CGN}｡$BS)${NORM}"
+# readonly B_UPSET="$BS(${CRD}｡${CYW}⊗$BS˳${CYW}⊗${CRD}｡$BS)${NORM}"
+# readonly B_DYING="$BS(${CDG}｡${CYW}x$BS⁔${CYW}x${CDG}｡$BS)${NORM}"
+# readonly B_WAIT1="$BS(${CGY}｡${CGN}◑$BS˳${CGN}◑${CGY}｡$BS)${NORM}"
+# readonly B_WAIT2="$BS(${CWE}｡${CGN}◒$BS‿${CGN}◒${CWE}｡$BS)${NORM}"
+# readonly B_WAIT3="$BS(${CGY}｡${CGN}◐$BS‿${CGN}◐${CGY}｡$BS)${NORM}"
+# readonly B_WAIT4="$BS(${CBK}｡${CGN}◓$BS‿${CGN}◓${CBK}｡$BS)${NORM}"
+# readonly B_EMBRS="$B_WAIT1"               ## EMBARRASSED (AKA PEBKAC)
+
 ## ======================
 ## = HELPING FUNCTIONS  =
 ## ======================
@@ -120,6 +133,10 @@ function p_color ()
   done
   echo -e $opts ${NORM}
 }
+
+##
+## PROMPTED FUNCTIONS (SEE $BP)
+##
 
 ## SCRIPT HAS SOMETHING INFORMATIVE TO SAY.
 function bot_info ()
