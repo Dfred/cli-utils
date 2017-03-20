@@ -1,7 +1,17 @@
 #!/bin/bash
 
+##
 ## SIMPLE MATH FUNCTIONS
-source $(dirname $0)/base-exit_codes.sh
+##
+
+## ENSURE GOOD SOURCING
+if test -z "${BASH_SOURCE[0]}"; then
+  read -p '$BASH_SOURCE support required. Press Enter to continue.'
+elif test -z "$CLI_UTILS_DEFINED"; then
+  CLI_UTILS_DEFINED=:
+  ## CAN DO OUR STUFF AND AS PEDANTIC AS TO STOP ON ERROR
+  source $(dirname ${BASH_SOURCE[0]})/base-exit_codes.sh
+  [[ "$0" != /bin/bash ]] && set -e       ## CATCH ERRORS IN YOUR OWN SCRIPTS
 
 ## REMOVES DASHES TO ARGUMENT
 ## @return echo OF ABSOLUTE NUMBER
