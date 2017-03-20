@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# STOP ON ERROR
+##
+## BASE FUNCTIONS FOR A COLORFUL INTERACTIVE CLI.
+##
+
+## STOP ON ERROR
 set -e                                    ## CATCH ERRORS IN YOUR OWN SCRIPTS
 
 source $(dirname $0)/base-exit_codes.sh
@@ -53,7 +57,15 @@ readonly P_CSMC="${CBE}"                  ## LEVEL: COSMETIC (OPTIONAL)
 ## = HELPING FUNCTIONS  =
 ## ======================
 
-function fatal_prog_error () {
+function echo_run () {
+  echo "# $@"
+  $@
+}
+
+## exit WITH $EXIT_FATAL_ERROR AFTER DISPLAYING SOME CONTEXT (HELP DEBUGGING)
+function fatal_prog_error ()
+  ## $1: MESSAGE DISPLAYED AFTER CONTEXT
+{
   echo -e "${CRD}${LARG}SCRIPT ERROR${NORM}${CRD} [$0:${BASH_LINENO[1]}] CALL"\
     TO ${FUNCNAME[1]}:${NORM} $1
   exit $EXIT_FATAL_ERROR
