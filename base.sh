@@ -4,10 +4,13 @@
 ## BASE FUNCTIONS FOR A COLORFUL INTERACTIVE CLI.
 ##
 
-## STOP ON ERROR
-set -e                                    ## CATCH ERRORS IN YOUR OWN SCRIPTS
-
-source $(dirname $0)/base-exit_codes.sh
+if test -z "${BASH_SOURCE[0]}"; then
+  read -p '$BASH_SOURCE support required. Press Enter to continue.'
+elif test -z "$CLI_UTILS_DEFINED"; then
+  CLI_UTILS_DEFINED=:
+  ## CAN DO OUR STUFF AND AS PEDANTIC AS TO STOP ON ERROR
+  source $(dirname ${BASH_SOURCE[0]})/base-exit_codes.sh
+  [[ "$0" != /bin/bash ]] && set -e       ## CATCH ERRORS IN YOUR OWN SCRIPTS
 
 ## ===============
 ## = FANCY STUFF =
@@ -276,3 +279,5 @@ function bot_argOrChoice ()
     return 2
   fi
 }
+
+fi
