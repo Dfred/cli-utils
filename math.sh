@@ -47,3 +47,5 @@ function rand_b64_big ()
   result=$(head -c ${chars%.*} /dev/urandom | base64)
   echo ${result::$1}
 }
+
+fi
