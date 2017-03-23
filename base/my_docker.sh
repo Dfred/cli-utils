@@ -168,12 +168,19 @@ function bot_show_network ()
   
 }
 
+function rm ()
+{
+  docker stop $@ > /dev/null && docker rm $@ > /dev/null      ## stop RETURNS TRUE EVEN IF ALREADY STOPPED
+  docker container ls -a
+}
 
 # ASK for the action (prefix with integer to avoid collision)
-COMMANDS="service show backup update restore"
+COMMANDS="service show backup update restore rm"
 command=$(val_from_userOrArgs '"What to do with docker?" 0 abort $COMMANDS' $@) || shift
 case "$command" in
  abort)	sh -c "exit $EXIT_USER_ABORT"	## sets $?
+ ;;
+ rm)    $command $@
  ;;
  service)
 	action=$(val_from_userOrArgs '"which action?" 0 abort start stop' $@) || shift
