@@ -8,7 +8,7 @@ if test -z "$CLI_UTILS_COLORS"; then
 ##    http://kevin.colyar.net/wp-content/uploads/2011/01/Preferences.jpg
 ## Linux: YOU ARE ALREADY PROVIDED.
 ## Windows: IF YOU'RE SERIOUS, TRY YOUR CHANCE WITH CYGWIN.
-readonly CDG=$'\x1B[0;30m'                ## COLOR DARK GREY
+readonly CDG=$'\x1B[0;30m'                ## COLOR DARK GREY  #TDL USE ARRAY TO SPARE GLOBAL SCOPE?
 readonly CRD=$'\x1B[0;31m'                ## COLOR RED
 readonly CGN=$'\x1B[0;32m'                ## COLOR GREEN
 readonly CYW=$'\x1B[0;33m'                ## COLOR YELLOW
