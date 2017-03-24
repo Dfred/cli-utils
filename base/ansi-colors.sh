@@ -18,8 +18,10 @@ readonly CCN=$'\x1B[0;36m'                ## COLOR CYAN
 readonly CGY=$'\x1B[0;37m'                ## COLOR LIGHT GREY
 readonly CWE=$'\x1B[1;37m'                ## COLOR WHITE (ALSO BOLD)
 #readonly CBK='\x1B[m'                     ## COLOR BLACK
-readonly NORM=$'\033[m'                   ##
-readonly LARG=$'\033[1m'                  ## BOLD
+readonly NORM=$'\033[m'                   #TDL remove
+readonly LARG=$'\033[1m'                  #TDL remove
+readonly CNORM=$'\033[m'                  ## NORMAL
+readonly CLARG=$'\033[1m'                 ## BOLD
 
 readonly CMPV="${CMA}${LARG}"             ## COMPUTED VALUE
 readonly USRV="${CCN}${LARG}"             ## USER-PROVIDED VALUE
