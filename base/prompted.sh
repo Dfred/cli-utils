@@ -65,7 +65,7 @@ function p_fatal ()
   ## $1   : exit CODE
   ## $2-n : SAME AS echo (MESSAGE WILL BE PREFIXED)
 {
-  ecode=$1; shift
+  local ecode=$1; shift
   echo; echo -ne "$BP$B_DYING "
   [[ ${1:0:1} == '-' ]] && local opts="$1" && shift
   e_color ${P_CRIT} "$opts" "$@"
