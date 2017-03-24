@@ -265,7 +265,7 @@ do_fatal "vagrant ssh -c 'sudo apt-get clean &&
 vagrant package --output $host.vagrant-box --vagrantfile ./Vagrantfile.$host &&
 vagrant box add -f $MYVAGRANTBOX $host.vagrant-box" "could not package the box"
 
-do_fatal "test -f $MYVAGRANTBOX &&
+do_fatal "test -f $host.vagrant-box &&
 vagrant init $MYVAGRANTBOX &&
 vagrant up" "could not find file $MYVAGRANTBOX or use this newly packaged box"
 
