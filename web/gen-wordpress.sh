@@ -566,7 +566,7 @@ if test -n "$user_mysqld" && run_as root service mysql status | grep stop; then
 fi
 
 ## CREATE BASE WordPress CONFIGURATION
-if [[ ! $SKIP_INSTALL ]] ; then
+if ! $SKIP_INSTALL; then
   p_info "I initiate WordPress configuration :"
   run_as $user_httpd rm -f "$path_install/wp-config.php"
   test -n "$hstprt_mysqld" && db_="--dbhost=$hstprt_mysqld"
@@ -698,7 +698,7 @@ for content in plugin theme; do
 done
 
 BOTASK_ANSWER=1
-[[ $SKIP_INSTALL ]] && p_choice "skip deletion of toy-articles?" 0 yes no
+$SKIP_INSTALL && p_choice "skip deletion of toy-articles?" 0 yes no
 if [[ $BOTASK_ANSWER == 1 ]]; then
   ## CLEANUP EXEMPLE POSTS                  #XXX: A DELETED POST ID IS KEPT BY WP.
   p_info "I delete toy-articles:"
@@ -709,7 +709,7 @@ fi
 ## CUSTOMISING UNLESS YOU CREATE YOUR OWN (CHILD)THEME WHICH SHOULD DO ALL
 if [[ "$create_content" != *theme* ]]; then
   BOTASK_ANSWER=1
-  [[ $SKIP_INSTALL ]] && p_choice "skip customisation?" 0 yes no
+  $SKIP_INSTALL && p_choice "skip customisation?" 0 yes no
   if [[ $BOTASK_ANSWER == 1 ]]; then
 
     ## CREATE PAGES
@@ -750,7 +750,7 @@ fi
 }
 
 BOTASK_ANSWER=1
-[[ $SKIP_INSTALL ]] && p_choice "skip setting permalinks structure, category_base, and tag_base?" 0 yes no
+$SKIP_INSTALL && p_choice "skip setting permalinks structure, category_base, and tag_base?" 0 yes no
 if [[ $BOTASK_ANSWER == 1 ]]; then
   ## SET PERMALINKS TO /%postname%/
   p_info "I set permalinks structure"
