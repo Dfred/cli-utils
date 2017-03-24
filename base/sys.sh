@@ -42,17 +42,17 @@ function run_as ()
 ## CHECK FOR THE PRESENCE OF BINARIES, POTENTIALLY BAILING OUT
 ## AND SET VARIABLES (NAMED AS THE BINARY) TO THEIR FULLPATH.
 function test_bin ()
-  ## $1: IF 1, CALL bot_fatal ON MISSING; IGNORE OTHERWISE
+  ## $1: IF 1, CALL p_fatal ON MISSING; IGNORE OTHERWISE
   ## $2-n: LIST OF BINARY NAMES TO BE FOUND
 {
   local bail=$1; shift
   for bin in $@; do
     path=$(type -p $bin 2>/dev/null) && declare global $bin="$path" ||
       {
-        test $bail && bot_fatal $EXIT_UNUSABLE_SYS "the executable $bin" ||
+        test $bail && p_fatal $EXIT_UNUSABLE_SYS "the executable $bin" ||
         continue
       }
-    test -x "$path" || bot_fatal $EXIT_UNUSABLE_SYS "$bin to have executable flags"
+    test -x "$path" || p_fatal $EXIT_UNUSABLE_SYS "$bin to have executable flags"
   done
 }
 
