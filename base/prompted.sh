@@ -68,7 +68,7 @@ function p_fatal ()
   ecode=$1; shift
   echo; echo -ne "$BP$B_DYING "
   [[ ${1:0:1} == '-' ]] && local opts="$1" && shift
-  e_color ${P_CRIT} "$opts" "I require $@"
+  e_color ${P_CRIT} "$opts" "$@"
   exit $ecode
 }
 
