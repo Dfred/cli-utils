@@ -104,7 +104,7 @@ ${CLARG}options:${CNORM}
   ${CYW}--show$NORM   show the commands to be run but do not perform them;
 
 ${CLARG}Post-install note:${CNORM} vagrant to be run as:
-  VAGRANT_VAGRANTFILE=$vagrantfile vagrant
+  ${CMA}VAGRANT_VAGRANTFILE=$vagrantfile vagrant${CNORM}
 "
 }
 
