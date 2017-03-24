@@ -486,12 +486,13 @@ test -n "$create_menus" && p_warn "I will create menu(s): $create_menus"
 ## ==============
 
 ## INSTALL OR UPDATE WordPress?
+SKIP_INSTALL=/bin/false
 if $wp core is-installed > /dev/null 2>&1; then
   ## INSTALLED: DISPLAY VERSION & ASK FOR APPROVAL TO MODIFY OR REPLACE
   p_warn "WordPress $($wp core version) ${LARG}is already installed" \.
   p_choice "What's your call?" 1 exit skip continue replace
   [[ $BOTASK_ANSWER == 0 ]] && exit $EXIT_UNUSABLE_SYS
-  [[ $BOTASK_ANSWER == 1 ]] && SKIP_INSTALL=:
+  [[ $BOTASK_ANSWER == 1 ]] && SKIP_INSTALL=/bin/true
   [[ $BOTASK_ANSWER == 3 ]] && rm -rf "$path_install/*" #XXX: drop DONE @ wp db create
 elif test ! -d "$path_install" && test ! -w "$PATH_INSTALL_P"; then
   ## $path_install's PARENT DIRECTORY NOT WRITABLE, HENCE BAIL
@@ -565,7 +566,7 @@ if test -n "$user_mysqld" && run_as root service mysql status | grep stop; then
 fi
 
 ## CREATE BASE WordPress CONFIGURATION
-if ! $SKIP_INSTALL; then
+if [[ ! $SKIP_INSTALL ]] ; then
   p_info "I initiate WordPress configuration :"
   run_as $user_httpd rm -f "$path_install/wp-config.php"
   test -n "$hstprt_mysqld" && db_="--dbhost=$hstprt_mysqld"
