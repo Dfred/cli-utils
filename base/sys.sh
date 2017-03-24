@@ -49,10 +49,10 @@ function test_bin ()
   for bin in $@; do
     path=$(type -p $bin 2>/dev/null) && declare global $bin="$path" ||
       {
-        test $bail && p_fatal $EXIT_UNUSABLE_SYS "the executable $bin" ||
+        test $bail && p_fatal $EXIT_UNUSABLE_SYS "$bin missing." ||
         continue
       }
-    test -x "$path" || p_fatal $EXIT_UNUSABLE_SYS "$bin to have executable flags"
+    test -x "$path" || p_fatal $EXIT_UNUSABLE_SYS "$bin lacks executable flags."
   done
 }
 
