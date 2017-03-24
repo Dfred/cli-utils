@@ -166,7 +166,8 @@ ExtraVagrant_PROV="
     chmod g+w               /var/www/;
     chmod +t                /var/www/;
 
-    ./guest_install.sh
+    cd /vagrant/;
+    ./guest_install.sh;
 
     service apache2 restart"
 if test -z "$ExtraVagrant_SHRF"; then
@@ -241,6 +242,8 @@ do_fatal "VF=\$(cat $vagrantfile.template) &&
 ## GET THE GUEST SYSTEM IMAGE. THE PROVISION STEP INSTALLS Guest Additions BUT
 ## THOSE REQUIRE A REBOOT TO TAKE EFFECT.
 do_fatal "vagrant up --no-provision" "creating the VM could not complete."
+
+#XXX: STEP 10
 do_fatal "VF=\$(cat $vagrantfile) &&
  echo \"\${VF/\#EXTRAVAGRANT_PROV/$ExtraVagrant_PROV}\" > $vagrantfile" "huh?"
 do_fatal "vagrant provision" "provisioning the VM could not complete."
